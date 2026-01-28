@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState } from "react"
 
-type Item = { priority: number; text: string }
+type Item = { id: string; priority: number; text: string }
 
 const Home = () => {
   const [items, setItems] = useState<Item[]>([])
@@ -25,14 +25,13 @@ const Home = () => {
   const addItem = () => {
     const p = parseInt(priorityInput, 10)
     if (!text.trim() || !Number.isFinite(p) || p <= 0) return
-    if (items.some(i => i.priority === p)) return
-    setItems(prev => [...prev, { text: text.trim(), priority: p }])
+    setItems(prev => [...prev, { id: crypto.randomUUID(), text: text.trim(), priority: p }])
     setText("")
     setPriorityInput("")
   }
 
-  const deleteItem = (priority: number) => {
-    setItems(prev => prev.filter(i => i.priority !== priority))
+  const deleteItem = (id: string) => {
+    setItems(prev => prev.filter(i => i.id !== id))
   }
 
   return (
@@ -60,9 +59,9 @@ const Home = () => {
           <div>Items</div>
           <div className="space-y-2">
             {sortedItems.map(item => (
-              <div key={item.priority} className="flex items-center justify-between gap-2">
+              <div key={item.id} className="flex items-center justify-between gap-2">
                 <div>{item.priority}. {item.text}</div>
-                <button className="cursor-pointer px-2 py-1 border rounded" onClick={() => deleteItem(item.priority)}>Delete</button>
+                <button className="cursor-pointer px-2 py-1 border rounded" onClick={() => deleteItem(item.id)}>Delete</button>
               </div>
             ))}
           </div>
